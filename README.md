@@ -10,7 +10,7 @@ library. This repository is public; generated SVGs are self-contained.
 ## Install
 
 ```sh
-go get github.com/iqhive/banner@v1.0.0
+go get github.com/iqhive/banner@v1.0.1
 ```
 
 The public module can be fetched through the normal Go module proxy and checksum
@@ -179,8 +179,12 @@ terminal width; it never stretches, squashes or clips letters.
 
 Both fonts support uppercase and lowercase Latin letters, hyphens and underscores.
 Use `WordmarkOptions.Font` with `map[rune]banner.Glyph` for another alphabet or
-custom letters. Each `Glyph` has nine rows of ASCII `#`, `.` or space, and each
-lit pixel occupies two columns. Unequal row widths are allowed and tested.
+custom letters. Each `Glyph` has nine ASCII rows. `#` lights both columns of
+a pixel, `<` lights only its left character column, and `>` only its right;
+`.` and space are blank. These half-pixel details allow one-column gaps inside
+compact letters while keeping the two-column pixel grid and spacing. The compact
+`m` uses eight terminal columns, with separate shoulders and three stems. The
+middle stem has a blank character column on either side. Unequal row widths are allowed and tested.
 `WordmarkOptions.Gap` can increase preferred spacing; zero means the default,
 and negative values are rejected. Inspect the returned `Left`, `Width`, `Gap`
 and `Cells` when debugging a name's layout.
@@ -277,5 +281,6 @@ return an error. Both font factories return independent maps for customization.
 ## Repository history and releases
 
 The main branch contains a single `Initial commit` with the finished shared
-generator. `v1.0.0` is the first supported release and the only repository tag;
-consumers pin `github.com/iqhive/banner v1.0.0` in their tooling modules.
+generator. `v1.0.0` is the first supported release. Later changes are separate
+commits and immutable version tags. Consumers pin the release used by their
+hero tooling; v1.0.1 adds one-column glyph details and a clearer compact `m`.

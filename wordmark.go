@@ -10,7 +10,8 @@ import (
 	"unicode/utf8"
 )
 
-// Glyph is a nine-row pixel letter: '#' lights a pixel; anything else is blank.
+// Glyph is a nine-row pixel letter. '#' lights both character columns; '<'
+// lights only the left column and '>' only the right. '.' and space are blank.
 // A pixel occupies two terminal columns. Rows may differ in width; layout uses
 // the widest row, which prevents wide lower strokes touching the next letter.
 type Glyph [9]string
@@ -68,8 +69,8 @@ func LayoutWordmark(word string, opts WordmarkOptions) (Wordmark, error) {
 		}
 		for _, row := range g {
 			for _, pixel := range row {
-				if pixel != '#' && pixel != '.' && pixel != ' ' {
-					return Wordmark{}, errors.New("banner: glyphs must use ASCII #, . or space")
+				if pixel != '#' && pixel != '<' && pixel != '>' && pixel != '.' && pixel != ' ' {
+					return Wordmark{}, errors.New("banner: glyphs must use ASCII #, <, >, . or space")
 				}
 			}
 			widths[i] = max(widths[i], len(row))
@@ -101,8 +102,11 @@ func LayoutWordmark(word string, opts WordmarkOptions) (Wordmark, error) {
 		k := 0
 		for y, row := range font[l] {
 			for col, pixel := range row {
-				if pixel == '#' {
+				if pixel == '#' || pixel == '<' || pixel == '>' {
 					for d := range 2 {
+						if pixel == '<' && d == 1 || pixel == '>' && d == 0 {
+							continue
+						}
 						out.Cells = append(out.Cells, MarkCell{x + 2*col + d, markTop + y, i, rune(digits[k%16])})
 						k++
 					}
