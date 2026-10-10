@@ -26,7 +26,7 @@ func build(seed uint64) (banner.Animation, error) {
 	static := len(frames) - 1
 	logo := banner.Frame{Hold: time.Second, HiveLogo: true}
 	logo.Center(14, "IQ Hive", banner.Bright)
-	logo.Center(16, "iqhive.com", banner.Muted)
+	logo.Center(16, "https://iqhive.com", banner.Muted)
 	frames = append(frames, logo)
 	return banner.Animation{Frames: frames, StaticFrame: static, Title: "banner", Description: "The shared opening reveals the banner wordmark, then a readable project card and the IQ Hive logo. Reduced motion shows the project card.", Command: "go run ./examples/demo"}, nil
 }
